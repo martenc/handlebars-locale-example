@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>RIG</title>
+		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.0.0-rc.4/handlebars.min.js"></script> 
+	</head>
+	<body>
+		<div id="loading"><img src="../Loading.gif"><br><h2>Loading</h2></div>
+		<script id="Handlebars-Template" type="text/x-handlebars-template">
+			<div id="Content">
+			  <h1>RIG</h1>
+			  {{#each Content}}
+			  	<div class='Box'>
+				  	<img class='Thumb' src="{{{Image}}}" alt="{{Name}}">
+				  	<h3>{{Name}}</h3>
+				  	<a id='product-image' href="{{ExternalLink.Url}}" target="_blank">{{ExternalLink.Name}}</a>
+				  	<p>{{content1}}</p>
+				  	<p>{{content2}}</p>
+				  	<p>{{content3}}</p>
+				  	<p>{{content4}}</p>
+				  	<p>{{content5}}</p>
+				  	<p>Product Features:</p>
+				  	<ul>
+				  		{{#each Feature}}
+				  			<li>{{this}}</li>
+				  		{{/each}}
+				  	</ul>
+			  	</div>
+			  {{/each}}
+			</div>
+		</script>
+		
+		<script type="text/javascript">
+
+			// locale: us, uk, fr
+			var local_segment = window.location.pathname.replace("/", "").replace("/", "");
+
+			var Ajax = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+			Ajax.onreadystatechange = function(){
+				if (Ajax.readyState==4 && Ajax.status==200)
+				{
+					var Content = JSON.parse(Ajax.responseText);
+					var Source = document.getElementById("Handlebars-Template").textContent;
+					var Template = Handlebars.compile(Source);
+					var HTML = Template({ Content : Content });
+					document.body.innerHTML = HTML;
+				}
+			}
+			Ajax.open("GET","../_data/content_" + local_segment + ".json", true);
+			Ajax.send();
+		</script>
+	</body>
+</html>
